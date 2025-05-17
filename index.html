@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exibir Imagem</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    img {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <img id="dynamicImage" src="" alt="Imagem dinâmica">
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const imageName = params.get('image');
+
+    const supportedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+
+    function tryLoadImage(index = 0) {
+      if (index >= supportedExtensions.length) return;
+
+      const ext = supportedExtensions[index];
+      const fullName = `${imageName}.${ext}`;
+      const img = new Image();
+
+      img.onload = () => {
+        document.getElementById('dynamicImage').src = fullName;
+      };
+
+      img.onerror = () => {
+        tryLoadImage(index + 1);
+      };
+
+      img.src = fullName;
+    }
+
+    if (imageName) {
+      tryLoadImage();
+    } else {
+      document.body.innerHTML = '<h1 style="color:white;text-align:center">Imagem não especificada na URL.</h1>';
+    }
+  </script>
+</body>
+</html>
